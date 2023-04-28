@@ -1,0 +1,66 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+apply from: '../deps.gradle'
+
+android {
+    namespace 'com.example.characterinfo'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.example.characterinfo"
+        minSdk 27
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        buildConfig true
+        viewBinding true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "version"
+    productFlavors {
+        simpsons {
+            dimension "version"
+            applicationId "com.example.simpsonsviewer"
+            buildConfigField "String", "DATA_API", "\"https://api.duckduckgo.com/?q=simpsons+characters&format=json\""
+        }
+        thewire {
+            dimension "version"
+            applicationId "com.example.wireviewer"
+            buildConfigField "String", "DATA_API", "\"https://api.duckduckgo.com/?q=the+wire+characters&format=json\""
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation core.values()
+    implementation koin.values()
+    implementation network.values()
+    implementation navigation.values()
+
+    testImplementation test.values()
+    androidTestImplementation androidTest.values()
+}
