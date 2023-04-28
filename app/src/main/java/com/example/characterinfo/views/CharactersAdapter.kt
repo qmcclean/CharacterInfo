@@ -55,7 +55,7 @@ class CharactersAdapter(
         private val binding: ItemCharactersBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(data: RelatedTopic, clickListener: (RelatedTopic) -> Unit) {
-            binding.characterName.text = data.Text
+            binding.characterName.text = data.Text.substringBefore("-")
             binding.root.setOnClickListener { clickListener(data) }
         }
     }
