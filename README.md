@@ -10,12 +10,14 @@ Users can click on any character and see detailed information about the characte
 App Architecture
 Based on mvvm architecture and repository pattern.
 
-1.png
-
 The app includes the following main components:
+
 A web api service.
+
 A repository that works with the database and the api service, providing a unified data interface.
+
 A ViewModel that provides data specific for the UI.
+
 The UI, which shows a visual representation of the data in the ViewModel.
 
 App Packages
