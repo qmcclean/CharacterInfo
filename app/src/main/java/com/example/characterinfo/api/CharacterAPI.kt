@@ -1,7 +1,7 @@
 package com.example.characterinfo.api
 
 import com.example.characterinfo.BuildConfig
-import com.example.characterinfo.models.CharactersData
+import com.example.characterinfo.network.response.CharactersData
 import retrofit2.http.GET
 
 

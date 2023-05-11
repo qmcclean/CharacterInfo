@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.characterinfo.R
 import com.example.characterinfo.databinding.ActivityCharacterBinding
-import com.example.characterinfo.models.RelatedTopic
+import com.example.characterinfo.network.response.RelatedTopic
 import com.example.characterinfo.viewModels.CharacterViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -34,8 +34,8 @@ class CharacterActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
 
         viewModel.characters.observe(this) {
-            supportActionBar?.title = it.Heading
-            adapter.submitList(it.RelatedTopics)
+            supportActionBar?.title = it.heading
+            adapter.submitList(it.relatedTopics)
         }
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

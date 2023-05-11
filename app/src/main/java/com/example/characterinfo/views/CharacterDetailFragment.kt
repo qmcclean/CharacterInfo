@@ -27,10 +27,10 @@ class CharacterDetailFragment : Fragment() {
     ): View {
         binding = FragmentCharacterDetailBinding.inflate(inflater, container, false)
         viewModel.selectedCharacter.observe(viewLifecycleOwner) {
-            binding.title.text = it.Text.substringBefore("-")
-            binding.description.text = it.Text
-            val icon = BASE_URL+it.Icon.URL
-            if (it.Icon.URL.isNullOrEmpty()) {
+            binding.title.text = it.text?.substringBefore("-")
+            binding.description.text = it.text
+            val icon = BASE_URL+it.icon?.url
+            if (it.icon?.url.isNullOrEmpty()) {
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_android_black_24dp)
             } else {
                 Picasso.get().load(icon).into(binding.iconURL)

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.characterinfo.databinding.ItemCharactersBinding
-import com.example.characterinfo.models.RelatedTopic
+import com.example.characterinfo.network.response.RelatedTopic
 
 class CharactersAdapter(
     private val listener: (RelatedTopic) -> Unit
@@ -34,7 +34,7 @@ class CharactersAdapter(
                 filteredItems = if (query.isEmpty()) {
                     currentList
                 } else {
-                    currentList.filter { it.Text.lowercase().contains(query)  }
+                    currentList.filter { it.text?.lowercase()?.contains(query) == true }
                 }
 
                 val results = FilterResults()
@@ -55,14 +55,14 @@ class CharactersAdapter(
         private val binding: ItemCharactersBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(data: RelatedTopic, clickListener: (RelatedTopic) -> Unit) {
-            binding.characterName.text = data.Text.substringBefore("-")
+            binding.characterName.text = data.text?.substringBefore("-")
             binding.root.setOnClickListener { clickListener(data) }
         }
     }
 
     class CharacterDiffCallback : DiffUtil.ItemCallback<RelatedTopic>() {
         override fun areItemsTheSame(oldItem: RelatedTopic, newItem: RelatedTopic): Boolean {
-            return oldItem.FirstURL == newItem.FirstURL
+            return oldItem.firstURL == newItem.firstURL
         }
 
         override fun areContentsTheSame(oldItem: RelatedTopic, newItem: RelatedTopic): Boolean {
