@@ -1,19 +1,24 @@
 package com.example.characterinfo.views
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.characterinfo.databinding.ItemCharactersBinding
+import com.example.characterinfo.models.CharactersUIData
 import com.example.characterinfo.network.response.RelatedTopic
+
 
 class CharactersAdapter(
     private val listener: (RelatedTopic) -> Unit
 ) : ListAdapter<RelatedTopic, CharactersAdapter.CharactersViewHolder>(CharacterDiffCallback()), Filterable {
 
+    private var originalList: List<RelatedTopic> = emptyList()
     private var filteredItems: List<RelatedTopic> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -32,7 +37,7 @@ class CharactersAdapter(
                 val query = constraint.toString().lowercase()
 
                 filteredItems = if (query.isEmpty()) {
-                    currentList
+                    originalList
                 } else {
                     currentList.filter { it.text?.lowercase()?.contains(query) == true }
                 }
@@ -42,13 +47,18 @@ class CharactersAdapter(
                 return results
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 filteredItems = results?.values as? List<RelatedTopic> ?: emptyList()
-
-                // Submit the filtered list to the adapter
                 submitList(filteredItems)
+                notifyDataSetChanged()
             }
         }
+    }
+
+    fun setOriginalList(list: LiveData<CharactersUIData>) {
+        originalList = list.value?.relatedTopics.orEmpty()
+        submitList(originalList)
     }
 
     class CharactersViewHolder(

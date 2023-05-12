@@ -30,27 +30,43 @@ class CharacterActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         val adapter = CharactersAdapter { onClickItem(it) }
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = adapter
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(this@CharacterActivity)
+            this.adapter = adapter
+        }
 
         viewModel.characters.observe(this) {
             supportActionBar?.title = it.heading
             adapter.submitList(it.relatedTopics)
+            adapter.setOriginalList(viewModel.characters)
         }
 
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
+        binding.searchView.apply {
+            onActionViewExpanded()
+            queryHint = resources.getString(R.string.search_hint)
+            clearFocus()
 
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                adapter.filter.filter(query)
-                return false
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextChange(query: String?): Boolean {
+                    if (query?.isEmpty() == true) {
+                        adapter.filter.filter("")
+                        scrollToPositionZero()
+                    }
+                    adapter.filter.filter(query)
+                    return false
+                }
+
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    adapter.filter.filter(query)
+                    return false
+                }
+            })
+
+            setOnCloseListener {
+                adapter.filter.filter("")
+                scrollToPositionZero()
+                false
             }
-        })
-        binding.searchView.setOnCloseListener {
-            adapter.filter.filter("")
-            false
         }
     }
 
@@ -61,5 +77,9 @@ class CharacterActivity : AppCompatActivity() {
             .replace(R.id.fragment, fragment)
             .addToBackStack(CharacterDetailFragment.TAG)
             .commit()
+    }
+
+    private fun scrollToPositionZero() {
+        (binding.recyclerView.layoutManager as? LinearLayoutManager)?.scrollToPosition(0)
     }
 }
